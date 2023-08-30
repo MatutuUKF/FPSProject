@@ -38,10 +38,17 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void Die() {
+        //First edit score die++
+        ScoreBoardDieEdit();
 
         PhotonNetwork.Destroy(controller);
         CreateController();
+        
 
+
+    }
+
+    private void ScoreBoardDieEdit() {
         deaths++;
 
         Hashtable hash = new Hashtable();

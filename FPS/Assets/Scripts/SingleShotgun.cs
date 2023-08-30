@@ -26,6 +26,7 @@ public class SingleShotgun : Gun
         {
 
             hit.collider.gameObject.GetComponent<IDamagable>()?.TakeDamage(((GunInfo)itemInfo).damage);
+            
             pv.RPC("RPC_Shoot", RpcTarget.All, hit.point,hit.normal);
         }
     
@@ -40,7 +41,7 @@ public class SingleShotgun : Gun
         {
 
             GameObject bulletImpactObj = Instantiate(bulletImpactPrefab, hitPosition + hitNomral * 0.001f, Quaternion.LookRotation(hitNomral, Vector3.up) * bulletImpactPrefab.transform.rotation);
-            Destroy(bulletImpactObj, 10);
+            Destroy(bulletImpactObj, 4);
             bulletImpactObj.transform.SetParent(colliders[0].transform);
 
         }

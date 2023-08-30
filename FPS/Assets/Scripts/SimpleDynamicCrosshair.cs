@@ -5,7 +5,7 @@ public class SimpleDynamicCrosshair : MonoBehaviour
 {
     private RectTransform reticle; // The RectTransform of the reticle UI element.
     public CharacterController characterController; // Reference to the CharacterController.
-
+    
     public float restingSize;
     public float maxSize;
     public float speed;

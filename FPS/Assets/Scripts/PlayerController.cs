@@ -14,9 +14,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
     [SerializeField] CharacterController characterController;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime, gravityStrength;
     [SerializeField] Item[] items;
+    [SerializeField] Animator animator;
 
     int itemIndex;
     int previousItemIndex = -1;
+
+    private bool playerIsDeath;
 
     float verticalLookRotation;
     [SerializeField] bool grounded;
@@ -30,15 +33,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
 
     const float maxHealth = 100f;
     float currentHealth = maxHealth;
- 
+
     PlayerManager playerManager;
-    
+
     private void Awake()
     {
 
         characterController = GetComponent<CharacterController>();
         pv = GetComponent<PhotonView>();
-
+        animator = GetComponentInChildren<Animator>();
+        playerIsDeath = false;
         playerManager = PhotonView.Find((int)pv.InstantiationData[0]).GetComponent<PlayerManager>();
     }
 
@@ -53,31 +57,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
         else
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
-            Destroy(rb);
             Destroy(ui);
         }
     }
 
     private void Update()
     {
-        if (!pv.IsMine)
+        if (!pv.IsMine || (PlayerIsDeath() == true)) //Checking if player == death than controlling locked
             return;
+        
+
+        
         Look();
         Move();
         ItemSwap();
-
-        if (Input.GetMouseButtonDown(0)) {
-
-            items[itemIndex].Use();
         
-        }
-
-        if (transform.position.y < -10f) {
+        if (transform.position.y < -10f || Input.GetKeyDown(KeyCode.F)) {
 
             Die();
 
         }
-
     }
 
 
@@ -122,8 +121,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
         
         }
 
-        
-    
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            items[itemIndex].Use();
+
+        }
+
+
+
     }
     void Look() {
 
@@ -218,7 +224,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
     }
 
     public void TakeDamage(float damage) {
-
+ 
         pv.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
     }
 
@@ -227,6 +233,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
 
         if (!pv.IsMine)
             return;
+
+
+        if (PlayerIsDeath()) // Check if the player is already dead
+            return;
+
 
         currentHealth -= damage;
 
@@ -238,10 +249,29 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
             PlayerManager.Find(info.Sender).GetKill();
         }
     }
+    void Die()
+    {
+        playerIsDeath = true;
+        pv.RPC(nameof(RPC_PlayDeathAnimation), RpcTarget.All);
+        StartCoroutine(DieCounting(3f));
+    }
 
-    void Die() {
+    [PunRPC]
+    void RPC_PlayDeathAnimation()
+    {
+        if (!pv.IsMine)
+        {
+            animator.SetBool("Die", true);
+        }
+    }
 
+        public bool PlayerIsDeath() => playerIsDeath;
+
+    //IEnumerators
+    private IEnumerator DieCounting(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
         playerManager.Die();
-    
+
     }
 }
