@@ -760,11 +760,11 @@ MonoBehaviour:
   cameraHolder: {fileID: 6587098840920911422}
   characterController: {fileID: 0}
   mouseSensitivity: 0
-  sprintSpeed: 2
-  walkSpeed: 10
-  jumpForce: 150
+  sprintSpeed: 8
+  walkSpeed: 6
+  jumpForce: 5
   smoothTime: 0
-  gravityStrength: 9.8
+  gravityStrength: 25
   items:
   - {fileID: 6555986640020083970}
   - {fileID: 1598316731975389466}

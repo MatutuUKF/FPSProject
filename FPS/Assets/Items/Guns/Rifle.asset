@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad83f0aa6f60b94a9af7c85c180ed85, type: 3}
   m_Name: Rifle
   m_EditorClassIdentifier: 
-  damage: 50
+  damage: 25
