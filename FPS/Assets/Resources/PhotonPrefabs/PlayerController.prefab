@@ -591,7 +591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66fde7059899e67488beab4c00ceda3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 0}
+  characterController: {fileID: 3957044367249740612}
   restingSize: 70
   maxSize: 150
   speed: 10
